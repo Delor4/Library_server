@@ -16,7 +16,9 @@ class CreateLogTable extends Migration
         Schema::create('log', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('iduser');
-            $table->integer('idbook');
+            $table->foreign('iduser')->references('id')->on('users');
+            $table->integer('idcatalog');
+            $table->foreign('idcatalog')->references('idcatalog')->on('catalog');
             $table->integer('eventtype');
             $table->timestamps();
         });

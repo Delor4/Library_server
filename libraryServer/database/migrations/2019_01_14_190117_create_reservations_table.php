@@ -16,7 +16,9 @@ class CreateReservationsTable extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->increments('idreservation');
             $table->integer('iduser');
+            $table->foreign('iduser')->references('id')->on('users');
             $table->integer('idcatalog');
+            $table->foreign('idcatalog')->references('idcatalog')->on('catalog');
             $table->timestamps();
         });
     }
