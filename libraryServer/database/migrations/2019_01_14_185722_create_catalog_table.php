@@ -14,7 +14,7 @@ class CreateCatalogTable extends Migration
     public function up()
     {
         Schema::create('catalog', function (Blueprint $table) {
-            $table->increments('idbook');
+            $table->increments('idcatalog');
             $table->integer('idbooks');
             $table->timestamps();
         });
