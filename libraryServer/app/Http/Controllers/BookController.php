@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Book;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Integer;
 
 class BookController extends Controller
 {
@@ -14,7 +15,12 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        $books = Book::all();
+        
+        return response()->json([
+            'success'=>true, 
+            'books'=>$books]
+          );
     }
 
     /**
@@ -44,9 +50,14 @@ class BookController extends Controller
      * @param  \App\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function show(Book $book)
+    public function show($idbook)
     {
-        //
+        $book = Book::find($idbook);
+        
+        return response()->json([
+            'success'=>true,
+            'book'=>$book]
+            );
     }
 
     /**

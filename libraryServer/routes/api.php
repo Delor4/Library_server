@@ -24,4 +24,11 @@ use Illuminate\Http\Request;
         Route::get('user', function (Request $request) {
                 return response()->json(['success'=>$success], $request->user());
             });
+        
+        Route::get('book', 'BookController@index');
+        Route::get('book/{id}', 'BookController@show');
+        //Route::get('book/{id}', function($id) {
+        //    return App\Book::find($id);
+        //});
     });
+    
