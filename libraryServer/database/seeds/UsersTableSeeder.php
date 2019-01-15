@@ -15,14 +15,14 @@ class UsersTableSeeder extends Seeder
         //librarian
         DB::table('users')->insert([
             'name' => 'bibl',
-            'email' => str_random(10).'@gmail.com',
+            'email' => 'bibl@bibl.com',
             'password' => bcrypt('secret'),
             'role' => 1,
         ]);
         //first user
         DB::table('users')->insert([
             'name' => 'user1',
-            'email' => str_random(10).'@gmail.com',
+            'email' => 'user@user.com',
             'password' => bcrypt('secret'),
             'role' => 2,
         ]);
