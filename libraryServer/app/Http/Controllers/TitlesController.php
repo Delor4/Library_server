@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Book;
 use App\Titles;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TitlesController extends Controller
 {
@@ -49,14 +52,27 @@ class TitlesController extends Controller
      * @param  \App\Titles  $titles
      * @return \Illuminate\Http\Response
      */
-    public function show($idtitles)
+    public function show($idtitle)
     {
-        $titles = Titles::find($idtitles);
+        $title = Titles::find($idtitle);
         
-        return response()->json([
-            'success'=>true,
-            'titles'=>$titles,
-        ]);
+        if(Auth::user()->librarian){
+            
+            $object = [];
+            foreach (Book::where('idtitles', $title->idtitles)->get() as $key => $value)
+            {
+                array_push($object,$value->idbooks);
+            }
+            $title['books'] = (object)$object;
+            
+        }
+        
+        
+            return response()->json([
+                'success'=>true,
+                'titles'=>$title,
+            ]);
+        
     }
 
     /**
