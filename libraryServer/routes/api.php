@@ -27,9 +27,8 @@ use Illuminate\Http\Request;
         
         Route::get('book', 'BookController@index');
         Route::get('book/{id}', 'BookController@show');
-        //Route::get('book/{id}', function($id) {
-        //    return App\Book::find($id);
-        //});
+        Route::delete('book/{id}', 'BookController@destroy');
+        
         Route::get('title', 'TitlesController@index');
         Route::get('title/{id}', 'TitlesController@show');
     });

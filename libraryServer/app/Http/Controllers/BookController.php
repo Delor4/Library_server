@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
@@ -14,12 +15,12 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::all();
+        $books = Book::join('titles', 'books.idtitles', '=', 'titles.idtitles')->get();
         
         return response()->json([
-            'success'=>true, 
-            'books'=>$books]
-          );
+            'success'=>true,
+            'books'=>$books,
+        ]);
     }
 
     /**
@@ -55,8 +56,8 @@ class BookController extends Controller
         
         return response()->json([
             'success'=>true,
-            'book'=>$book]
-            );
+            'book'=>$book,
+        ]);
     }
 
     /**
@@ -88,8 +89,16 @@ class BookController extends Controller
      * @param  \App\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Book $book)
+    public function destroy($book)
     {
-        //
+        if(!(Auth::user()->librarian)){
+            return response()->json(['error'=>'Unauthorised'], 401);
+        }
+        
+        Book::destroy($book);
+        
+        return response()->json([
+            'success'=>true,
+        ]);
     }
 }

@@ -105,6 +105,8 @@ class TitlesController extends Controller
      */
     public function destroy(Titles $titles)
     {
-        //
+        if(Auth::user()->librarian){
+        
+        }
     }
 }
