@@ -57,7 +57,6 @@ class TitlesController extends Controller
         $title = Titles::find($idtitle);
         
         if(Auth::user()->librarian){
-            
             $object = [];
             foreach (Book::where('idtitles', $title->idtitles)->get() as $key => $value)
             {
