@@ -25,14 +25,8 @@ use Illuminate\Http\Request;
                 return response()->json(['success'=>$success], $request->user());
             });
         
-        Route::get('book', 'BookController@index');
-        Route::get('book/{id}', 'BookController@show');
-        Route::delete('book/{id}', 'BookController@destroy');
-        Route::post('book', 'BookController@store');
-        Route::put('book/{id}', 'BookController@update');
+        Route::resource('book', 'BookController',  ['except' => [ 'edit', 'create' ]]);
         
-        
-        Route::get('title', 'TitlesController@index');
-        Route::get('title/{id}', 'TitlesController@show');
+        Route::resource('title', 'TitlesController',  ['except' => [ 'edit', 'create' ]]);
     });
     
