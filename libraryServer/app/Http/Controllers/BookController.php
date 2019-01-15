@@ -55,7 +55,7 @@ class BookController extends Controller
      */
     public function show($idbook)
     {
-        $book = Book::find($idbook);
+        $book = Book::findOrFail($idbook);
         
         return response()->json([
             'success'=>true,
@@ -76,7 +76,7 @@ class BookController extends Controller
             return response()->json(['error'=>'Unauthorised'], 401);
         }
         
-        $book = Book::find($idbook);
+        $book = Book::findOrFail($idbook);
         
         $book->idtitles = $request->idtitles;
         
