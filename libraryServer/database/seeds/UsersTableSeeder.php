@@ -17,14 +17,14 @@ class UsersTableSeeder extends Seeder
             'name' => 'bibl',
             'email' => 'bibl@bibl.com',
             'password' => bcrypt('secret'),
-            'role' => 1,
+            'librarian' => 1,
         ]);
         //first user
         DB::table('users')->insert([
             'name' => 'user1',
             'email' => 'user@user.com',
             'password' => bcrypt('secret'),
-            'role' => 2,
+            'librarian' => 0,
         ]);
         //rest of users
         for ($i = 0; $i < 8; $i++) {
@@ -32,7 +32,6 @@ class UsersTableSeeder extends Seeder
                 'name' => str_random(10),
                 'email' => str_random(10).'@gmail.com',
                 'password' => bcrypt('secret'),
-                'role' => 2,
             ]);
         }
     }
