@@ -28,10 +28,13 @@ class BookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    /*
+      
     public function create()
     {
         //
     }
+    */
 
     /**
      * Store a newly created resource in storage.
@@ -41,7 +44,19 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(!(Auth::user()->librarian)){
+            return response()->json(['error'=>'Unauthorised'], 401);
+        }
+        
+        $book = new Book;
+        
+        $book->idtitles = $request->idtitles;
+        
+        $book->save();
+        
+        return response()->json([
+            'success'=>true,
+        ]);
     }
 
     /**
@@ -66,11 +81,11 @@ class BookController extends Controller
      * @param  \App\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function edit(Book $book)
+    /* public function edit(Book $book)
     {
         //
     }
-
+ */
     /**
      * Update the specified resource in storage.
      *
@@ -78,9 +93,21 @@ class BookController extends Controller
      * @param  \App\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Book $book)
+    public function update(Request $request, Book $idbook)
     {
-        //
+        if(!(Auth::user()->librarian)){
+            return response()->json(['error'=>'Unauthorised'], 401);
+        }
+        
+        $book = Book::find($idbook);
+        
+        $book->idtitles = $request->idtitles;
+        
+        $book->save();
+        
+        return response()->json([
+            'success'=>true,
+        ]);
     }
 
     /**
