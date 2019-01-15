@@ -17,8 +17,8 @@ class CatalogTableSeeder extends Seeder
             //count of title
             $count=array_random([1, 2, 3]);
             for ($e = 0; $e < $count; $e++) {
-                DB::table('catalog')->insert([
-                    'idbooks' => $i,
+                DB::table('books')->insert([
+                    'idtitles' => $i,
                 ]);
             }
         }

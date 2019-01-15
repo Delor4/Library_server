@@ -13,10 +13,10 @@ class CreateCatalogTable extends Migration
      */
     public function up()
     {
-        Schema::create('catalog', function (Blueprint $table) {
-            $table->increments('idcatalog');
-            $table->integer('idbooks');
-            $table->foreign('idbooks')->references('idbooks')->on('books');
+        Schema::create('books', function (Blueprint $table) {
+            $table->increments('idbooks');
+            $table->integer('idtitles');
+            $table->foreign('idtitles')->references('idtitles')->on('titles');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateCatalogTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('catalog');
+        Schema::dropIfExists('books');
     }
 }

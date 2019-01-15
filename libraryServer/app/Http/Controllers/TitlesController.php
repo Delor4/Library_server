@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Book;
+use App\Titles;
 use Illuminate\Http\Request;
 
-class BookController extends Controller
+class TitlesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,12 +14,12 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::all();
+        $titles = Titles::all();
         
         return response()->json([
-            'success'=>true, 
-            'books'=>$books]
-          );
+            'success'=>true,
+            'books'=>$titles]
+            );
     }
 
     /**
@@ -46,26 +46,26 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Book  $book
+     * @param  \App\Titles  $titles
      * @return \Illuminate\Http\Response
      */
-    public function show($idbook)
+    public function show($idtitles)
     {
-        $book = Book::find($idbook);
+        $titles = Titles::find($idtitles);
         
         return response()->json([
             'success'=>true,
-            'book'=>$book]
-            );
+            'titles'=>$titles,
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Book  $book
+     * @param  \App\Titles  $titles
      * @return \Illuminate\Http\Response
      */
-    public function edit(Book $book)
+    public function edit(Titles $titles)
     {
         //
     }
@@ -74,10 +74,10 @@ class BookController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Book  $book
+     * @param  \App\Titles  $titles
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Book $book)
+    public function update(Request $request, Titles $titles)
     {
         //
     }
@@ -85,10 +85,10 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Book  $book
+     * @param  \App\Titles  $titles
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Book $book)
+    public function destroy(Titles $titles)
     {
         //
     }

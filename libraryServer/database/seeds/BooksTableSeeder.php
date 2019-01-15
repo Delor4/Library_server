@@ -13,7 +13,7 @@ class BooksTableSeeder extends Seeder
     public function run()
     {
         for ($i = 0; $i < 10; $i++) {
-            DB::table('books')->insert([
+            DB::table('titles')->insert([
                 'title' => strtoupper(str_random(1)).str_random(10).' '.str_random(10).'.',
             ]);
         }

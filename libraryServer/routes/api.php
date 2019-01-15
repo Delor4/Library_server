@@ -30,5 +30,7 @@ use Illuminate\Http\Request;
         //Route::get('book/{id}', function($id) {
         //    return App\Book::find($id);
         //});
+        Route::get('title', 'TitlesController@index');
+        Route::get('title/{id}', 'TitlesController@show');
     });
     
