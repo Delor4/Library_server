@@ -40,7 +40,7 @@ class BookController extends Controller
         
         $book = new Book;
         
-        $book->idtitles = $request->idtitles;
+        $book->idtitles = $request->input('idtitles', $book->idtitles);
         
         $book->save();
         
@@ -102,7 +102,7 @@ class BookController extends Controller
         
         $book = Book::findOrFail($idbook);
         
-        $book->idtitles = $request->idtitles;
+        $book->idtitles = $request->input('idtitles', $book->idtitles);
         
         $book->save();
         

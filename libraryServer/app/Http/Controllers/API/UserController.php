@@ -96,13 +96,20 @@ class UserController extends Controller
         if(!(Auth::user()->librarian)){
             return response()->json(['error'=>'Unauthorised'], 401);
         }
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required',
+            'c_password' => 'required|same:password',
+        ]);
         
         $user = new User;
         
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = $request->password;
-        $user->librarian = $request->librarian;
+        $user->librarian = $request->input('librarian', 0);
+        
         
         $user->save();
         
@@ -164,10 +171,10 @@ class UserController extends Controller
         
         $user = User::findOrFail($iduser);
         
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = $request->password;
-        $user->librarian = $request->librarian;
+        $user->name = $request->input('name', $user->name);
+        $user->email = $request->input('email', $user->email);
+        $user->password = $request->input('password', $user->password);
+        $user->librarian = $request->input('librarian', $user->librarian);
         
         $user->save();
         

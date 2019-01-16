@@ -38,7 +38,7 @@ class ReservationsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'idbooks' => 'required',
+            'idtitles' => 'required',
         ]);
         
         $for_id = Auth::user()->id;
@@ -46,16 +46,15 @@ class ReservationsController extends Controller
             $for_id = $request->input('iduser', Auth::user()->id);
         }
         
-        $idbook = $request->idbooks;
+        $idtitles = $request->idtitles;
         
-        if(Rents::where('iduser',$for_id)->where('idbooks',$idbook)->count()>0){
+        if(Rents::join('books','reservations.idbooks','books.idbooks')->where('iduser',$for_id)->where('idtitles',$idtitles)->count()>0){
             return response()->json(['error'=>'Forbidden',
                 'msg' => 'Already rented',
             ], 403);
         }
         
-        if(Reservations::join('books','reservations.idbooks','books.idbooks')
-            ->where('iduser',$for_id)->where('idbook',$idbook)->count()>0){
+        if(Reservations::where('iduser',$for_id)->where('idtitles',$idtitles)->count()>0){
             return response()->json(['error'=>'Forbidden',
                 'msg' => 'Already reserved',
             ], 403);
@@ -71,7 +70,7 @@ class ReservationsController extends Controller
         $reservation = new Reservations;
         
         $reservation->iduser = $for_id;
-        $reservation->idbooks = $request->idbooks;
+        $reservation->idbooks = $idbook;
         
         $reservation->save();
         
@@ -134,11 +133,11 @@ class ReservationsController extends Controller
      */
     public function destroy($idreservation)
     {
-        if(!(Auth::user()->librarian)){
+        $reservation = Reservations::findOrFail($idreservation);
+        
+        if($reservation->iduser!=Auth::user()->id and !(Auth::user()->librarian)){
             return response()->json(['error'=>'Unauthorised'], 401);
         }
-        
-        $reservation = Reservations::findOrFail($idreservation);
         
         $reservation->delete();
         
