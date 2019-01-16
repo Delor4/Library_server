@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Book;
+use App\Rents;
+use App\Reservations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -57,6 +59,28 @@ class BookController extends Controller
     {
         $book = Book::findOrFail($idbook);
         
+        if(Auth::user()->librarian){
+            
+            $array = [];
+            foreach (Rents::where('idbooks', $book->idbooks)->get() as $key => $value)
+            {
+                array_push($array,$value->iduser);
+            }
+            $book['rents'] = (object)$array;
+            
+            $array = [];
+            foreach (
+                Reservations::
+                    //join('titles', 'titles.idtitles', '=', 'reservations.idtitles')
+                    where('idtitles', $book->idtitles)
+                    ->get()
+                as $key => $value)
+            {
+                array_push($array,$value->iduser);
+            }
+            $book['reservations'] = (object)$array;
+        }
+        
         return response()->json([
             'success'=>true,
             'book'=>$book,
@@ -93,13 +117,14 @@ class BookController extends Controller
      * @param  \App\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function destroy($book)
+    public function destroy($idbook)
     {
         if(!(Auth::user()->librarian)){
             return response()->json(['error'=>'Unauthorised'], 401);
         }
         
-        Book::destroy($book);
+        $book = Book::findOrFail($idbook);
+        $book->delete();
         
         return response()->json([
             'success'=>true,

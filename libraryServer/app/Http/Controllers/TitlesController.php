@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Book;
 use App\Titles;
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,17 +24,7 @@ class TitlesController extends Controller
             );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
+        /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -43,7 +32,19 @@ class TitlesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(!(Auth::user()->librarian)){
+            return response()->json(['error'=>'Unauthorised'], 401);
+        }
+        
+        $title = new Titles;
+        
+        $title->title = $request->title;
+        
+        $title->save();
+        
+        return response()->json([
+            'success'=>true,
+        ]);
     }
 
     /**
@@ -54,35 +55,25 @@ class TitlesController extends Controller
      */
     public function show($idtitle)
     {
-        $title = Titles::find($idtitle);
+        $title = Titles::findOrFail($idtitle);
         
         if(Auth::user()->librarian){
-            $object = [];
+            
+            $array = [];
             foreach (Book::where('idtitles', $title->idtitles)->get() as $key => $value)
             {
-                array_push($object,$value->idbooks);
+                array_push($array,$value->idbooks);
             }
-            $title['books'] = (object)$object;
+            
+            $title['books'] = (object)$array;
             
         }
         
+        return response()->json([
+            'success'=>true,
+            'titles'=>$title,
+        ]);
         
-            return response()->json([
-                'success'=>true,
-                'titles'=>$title,
-            ]);
-        
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Titles  $titles
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Titles $titles)
-    {
-        //
     }
 
     /**
@@ -92,9 +83,21 @@ class TitlesController extends Controller
      * @param  \App\Titles  $titles
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Titles $titles)
+    public function update(Request $request, $titles)
     {
-        //
+        if(!(Auth::user()->librarian)){
+            return response()->json(['error'=>'Unauthorised'], 401);
+        }
+        
+        $title = Book::findOrFail($titles);
+        
+        $title->title = $request->title;
+        
+        $title>save();
+        
+        return response()->json([
+            'success'=>true,
+        ]);
     }
 
     /**
@@ -103,10 +106,17 @@ class TitlesController extends Controller
      * @param  \App\Titles  $titles
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Titles $titles)
+    public function destroy($titles)
     {
-        if(Auth::user()->librarian){
-        
+        if(!(Auth::user()->librarian)){
+            return response()->json(['error'=>'Unauthorised'], 401);
         }
+        
+        $title = Book::findOrFail($titles);
+        $title->delete();
+        
+        return response()->json([
+            'success'=>true,
+        ]);
     }
 }

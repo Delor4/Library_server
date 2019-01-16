@@ -17,8 +17,8 @@ class CreateReservationsTable extends Migration
             $table->increments('idreservation');
             $table->integer('iduser');
             $table->foreign('iduser')->references('id')->on('users');
-            $table->integer('idcatalog');
-            $table->foreign('idcatalog')->references('idcatalog')->on('catalog');
+            $table->integer('idtitles');
+            $table->foreign('idtitles')->references('idtitles')->on('titles');
             $table->timestamps();
         });
     }
