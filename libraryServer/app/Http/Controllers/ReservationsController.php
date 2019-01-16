@@ -62,7 +62,7 @@ class ReservationsController extends Controller
         }
         
         
-        if(Auth::user()->reservations_limit >= Reservations::where('iduser',$for_id)->count()>0){
+        if(Auth::user()->reservations_limit >= Reservations::where('iduser',$for_id)->count()){
             return response()->json(['error'=>'Forbidden',
                 'msg' => 'Max reservations reached',
             ], 403);
@@ -87,35 +87,17 @@ class ReservationsController extends Controller
      * @param  \App\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function show($idbook)
+    public function show($idreservation)
     {
-        $book = Book::findOrFail($idbook);
+        $reservation = Reservations::findOrFail($idreservation);
         
-        if(Auth::user()->librarian){
-            
-            $array = [];
-            foreach (Rents::where('idbooks', $book->idbooks)->get() as $key => $value)
-            {
-                array_push($array,$value->iduser);
-            }
-            $book['rents'] = (object)$array;
-            
-            $array = [];
-            foreach (
-                Reservations::
-                //join('titles', 'titles.idtitles', '=', 'reservations.idtitles')
-                where('idtitles', $book->idtitles)
-                ->get()
-                as $key => $value)
-            {
-                array_push($array,$value->iduser);
-            }
-            $book['reservations'] = (object)$array;
+        if($reservation->iduser!=Auth::user()->id and !(Auth::user()->librarian)){
+            return response()->json(['error'=>'Unauthorised'], 401);
         }
         
         return response()->json([
             'success'=>true,
-            'book'=>$book,
+            'reservation'=>$reservation,
         ]);
     }
     
@@ -126,17 +108,18 @@ class ReservationsController extends Controller
      * @param  \App\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Book $idbook)
+    public function update(Request $request, $idreservation)
     {
         if(!(Auth::user()->librarian)){
             return response()->json(['error'=>'Unauthorised'], 401);
         }
         
-        $book = Book::findOrFail($idbook);
+        $reservation = Reservations::findOrFail($idreservation);
         
-        $book->idtitles = $request->idtitles;
+        $reservation->iduser = $request->input('iduser', $reservation->iduser);
+        $reservation->idtitles = $request->input('idtitles', $reservation->idtitles);
         
-        $book->save();
+        $reservation->save();
         
         return response()->json([
             'success'=>true,
@@ -149,15 +132,15 @@ class ReservationsController extends Controller
      * @param  \App\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function destroy($idbook)
+    public function destroy($idreservation)
     {
         if(!(Auth::user()->librarian)){
             return response()->json(['error'=>'Unauthorised'], 401);
         }
         
-        $book = Book::findOrFail($idbook);
+        $reservation = Reservations::findOrFail($idreservation);
         
-        $book->delete();
+        $reservation->delete();
         
         return response()->json([
             'success'=>true,
