@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\API;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use App\Book;
+use App\Rents;
+use App\Reservations;
 
 class UserController extends Controller
 {
@@ -49,6 +53,7 @@ class UserController extends Controller
         $success['name'] =  $user->name;
         return response()->json(['success'=>$success], $this-> successStatus);
     }
+    
     /**
      * details api
      *
@@ -56,7 +61,146 @@ class UserController extends Controller
      */
     public function details()
     {
+        
         $user = Auth::user();
         return response()->json(['success' => $user], $this-> successStatus);
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        if(!(Auth::user()->librarian)){
+            return response()->json(['error'=>'Unauthorised'], 401);
+        }
+        
+        $users = User::all();
+        
+        return response()->json([
+            'success'=>true,
+            'users'=>$users,
+        ]);
+    }
+    
+    
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        if(!(Auth::user()->librarian)){
+            return response()->json(['error'=>'Unauthorised'], 401);
+        }
+        
+        $user = new User;
+        
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->librarian = $request->librarian;
+        
+        $user->save();
+        
+        return response()->json([
+            'success'=>true,
+        ]);
+    }
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Book  $book
+     * @return \Illuminate\Http\Response
+     */
+    public function show($iduser)
+    {
+        if(!(Auth::user()->librarian)){
+            return response()->json(['error'=>'Unauthorised'], 401);
+        }
+        
+        $user = User::findOrFail($iduser);
+        
+                    
+        $array = [];
+        foreach (Rents::where('iduser', $user->id)->get() as $key => $value)
+        {
+            array_push($array,$value->idbooks);
+        }
+        $user['rents'] = (object)$array;
+        
+        $array = [];
+        foreach (
+            Reservations::where('iduser', $user->id)->get()
+            as $key => $value)
+        {
+            array_push($array,$value->idtitles);
+        }
+        $user['reservations'] = (object)$array;
+        
+        
+        return response()->json([
+            'success'=>true,
+            'user'=>$user,
+        ]);
+    }
+    
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Book  $book
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $iduser)
+    {
+        if(!(Auth::user()->librarian)){
+            return response()->json(['error'=>'Unauthorised'], 401);
+        }
+        
+        $user = User::findOrFail($iduser);
+        
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->librarian = $request->librarian;
+        
+        $user->save();
+        
+        return response()->json([
+            'success'=>true,
+        ]);
+    }
+    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Book  $book
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($iduser)
+    {
+        if(!(Auth::user()->librarian)){
+            return response()->json(['error'=>'Unauthorised'], 401);
+        }
+        
+        $user = User::findOrFail($iduser);
+        
+        try{
+            $user->delete();
+        }catch(QueryException $e){
+            return response()->json(['error'=>'Conflict',
+                'msg'=>'User have reservations or rents',
+            ], 409);
+        }
+        
+        return response()->json([
+            'success'=>true,
+        ]);
+       
     }
 }

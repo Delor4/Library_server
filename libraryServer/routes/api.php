@@ -21,9 +21,10 @@ use Illuminate\Http\Request;
     Route::post('register', 'API\UserController@register');
     Route::group(['middleware' => 'auth:api'], function(){
         Route::post('details', 'API\UserController@details');
-        Route::get('user', function (Request $request) {
+        /* Route::get('user', function (Request $request) {
                 return response()->json(['success'=>$success], $request->user());
-            });
+            }); */
+        Route::resource('user', 'API\UserController',  ['except' => [ 'edit', 'create' ]]);
         
         Route::resource('book', 'BookController',  ['except' => [ 'edit', 'create' ]]);
         

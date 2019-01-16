@@ -124,6 +124,7 @@ class BookController extends Controller
         }
         
         $book = Book::findOrFail($idbook);
+        
         $book->delete();
         
         return response()->json([
