@@ -1,2 +1,5 @@
 OAuth2 authorisation from: https://laravel.com/docs/5.7/passport
 After migration (seed) do: php artisan passport:client --personal
+
+TODO:
+msg for foreign key constrains
