@@ -29,7 +29,7 @@ class UsersTableSeeder extends Seeder
         //rest of users
         for ($i = 0; $i < 8; $i++) {
             DB::table('users')->insert([
-                'name' => str_random(10),
+                'name' => 'user' . ($i + 2),
                 'email' => str_random(10).'@gmail.com',
                 'password' => bcrypt('secret'),
             ]);

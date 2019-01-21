@@ -12,10 +12,16 @@ class BooksTableSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 0; $i < 10; $i++) {
-            DB::table('titles')->insert([
-                'title' => strtoupper(str_random(1)).str_random(10).' '.str_random(10).'.',
-            ]);
+        $names = [
+            0 => ['Podstawy','Wstep do','Biblia'],
+            1 => ['programowania','algorytmiki', 'hackowania', 'baz danych'],
+        ];
+        for ($i = 0; $i < count($names[0]); $i++) {
+            for ($j = 0; $j < count($names[1]); $j++) {
+                DB::table('titles')->insert([
+                    'title' => $names[0][$i] . ' ' . $names[1][$j].'.',
+                ]);
+            }
         }
     }
 }

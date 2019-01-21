@@ -12,13 +12,13 @@ class CatalogTableSeeder extends Seeder
      */
     public function run()
     {
-        //10 titles
-        for ($i = 1; $i <= 10; $i++) {
+        //12 titles
+        for ($i = 0; $i < 12; $i++) {
             //count of title
-            $count=array_random([1, 2, 3]);
+            $count=($i % 3) + 1;
             for ($e = 0; $e < $count; $e++) {
                 DB::table('books')->insert([
-                    'idtitles' => $i,
+                    'idtitles' => $i + 1,
                 ]);
             }
         }
