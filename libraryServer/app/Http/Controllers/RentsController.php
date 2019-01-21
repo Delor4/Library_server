@@ -123,7 +123,6 @@ class RentsController extends Controller
         //unlocks?
         return response()->json(['error'=>'Forbidden',
             'msg' => 'Too far in queue.',
-            'dupa' => $not_rented_count,
         ], 403);
         
     }
