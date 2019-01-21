@@ -15,11 +15,11 @@ class CreateLogTable extends Migration
     {
         Schema::create('log', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('iduser');
+            $table->unsignedInteger('iduser');
             $table->foreign('iduser')->references('id')->on('users');
-            $table->integer('idcatalog');
-            $table->foreign('idcatalog')->references('idcatalog')->on('catalog');
-            $table->integer('eventtype');
+//            $table->unsignedInteger('idcatalog');
+//            $table->foreign('idtitles')->references('idtitles')->on('titles');
+            $table->unsignedInteger('eventtype');
             $table->timestamps();
         });
     }
