@@ -28,7 +28,7 @@ use Illuminate\Http\Request;
         
         Route::resource('title', 'TitlesController',  ['except' => [ 'edit', 'create' ]]);
         Route::resource('book', 'BookController',  ['except' => [ 'edit', 'create' ]]);
-        Route::resource('reservation', 'ReservationsController',  ['except' => [ 'edit', 'create' ]]);
+        Route::resource('reservation', 'ReservationsController',  ['except' => [ 'edit', 'create', 'update']]);
         
     });
     
